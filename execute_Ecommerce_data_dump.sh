@@ -1,0 +1,1 @@
+mysql -uroot < Ecommerce_data_dump.sql
