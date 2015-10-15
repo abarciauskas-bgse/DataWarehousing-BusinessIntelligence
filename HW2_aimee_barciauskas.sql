@@ -62,7 +62,8 @@ create table if not exists employees (
   Extension varchar(4),
   Photo varchar(40),
   Notes text,
-  ReportsTo int
+  ReportsTo int,
+  foreign key (ReportsTo) references employees(EmployeeId)
 );
 
 create table if not exists customers (
@@ -98,6 +99,7 @@ create table if not exists orders (
   RequiredDate datetime,
   ShippedDate datetime,
   ShipVia int(11),
+  foreign key (ShipVia) references shippers(ShipperId),
   Freight double,
   ShipName varchar(40),
   ShipAddress varchar(60),

@@ -1,1 +1,1 @@
-mysql -uroot < Ecommerce_data_dump.sql
+mysql -uroot < HW2_aimee_barciauskas.sql
