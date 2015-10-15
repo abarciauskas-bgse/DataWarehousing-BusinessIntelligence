@@ -5,7 +5,7 @@ create database ecommerce;
 use ecommerce;
 
 create table if not exists categories (
-  CategoryId int not null,
+  CategoryId int(11) not null,
   primary key (CategoryId),
   CategoryName varchar(15),
   Description text,
@@ -13,7 +13,7 @@ create table if not exists categories (
 );
 
 create table if not exists suppliers (
-  SupplierId int not null,
+  SupplierId int(11) not null,
   primary key (SupplierId),
   CompanyName varchar(40),
   ContactName varchar(30),
@@ -29,7 +29,7 @@ create table if not exists suppliers (
 );
 
 create table if not exists products (
-  ProductId int not null,
+  ProductId int(11) not null,
   primary key (ProductId),
   ProductName varchar(40),
   SupplierId int(11),
@@ -45,7 +45,7 @@ create table if not exists products (
 );
 
 create table if not exists employees (
-  EmployeeId int not null,
+  EmployeeId int(11) not null,
   primary key (EmployeeId),
   LastName varchar(20),
   FirstName varchar(10),
@@ -81,14 +81,14 @@ create table if not exists customers (
 );
 
 create table if not exists shippers (
-  ShipperId int not null,
+  ShipperId int(11) not null,
   primary key (ShipperId),
   CompanyName varchar(40),
   Phone varchar(24)
 );
 
 create table if not exists orders (
-  OrderId int not null,
+  OrderId int(11) not null,
   primary key (OrderId),
   CustomerId char(5),
   EmployeeId int(11),
@@ -108,7 +108,7 @@ create table if not exists orders (
 );
 
 create table if not exists order_details (
-  odId int not null,
+  odId int(10) not null,
   primary key (odID),
   OrderId int(11),
   ProductId int(11),
