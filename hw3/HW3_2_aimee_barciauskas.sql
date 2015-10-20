@@ -69,8 +69,8 @@ group by Album.AlbumId order by price_per_track desc limit 5;
 --  (Those with the highest cumulated unit price)
 -- but only if the average price per track is above 1
 -- QUESTION: Should this result be different?
-select * from
-  (select Album.*, avg(Track.UnitPrice) as price_per_track
+select * from (
+  select Album.*, avg(Track.UnitPrice) as price_per_track
     from Track
     join Album on (Track.AlbumId = Album.AlbumId)
   group by Album.AlbumId order by price_per_track desc limit 5)
@@ -81,22 +81,32 @@ as result where price_per_track > 1;
 -- for those Albums with more than one genre
 -- (tracks contained in an Album must be from at least two different genres)
 -- Show the result sorted by the number of different genres from the most to the least eclectic
-
+select * from (
+  select Album.AlbumId, count(distinct(Track.GenreId)) as distinct_genres
+    from Track
+    join Album on (Track.AlbumId = Album.AlbumId)
+  group by Album.AlbumId)
+as my_table where distinct_genres > 1;
 
 
 -- 10.Show the total number of Albums that you get from the previous result (hint: use a nested query)
-
+select count(*) from (
+  select * from (
+    select Album.AlbumId, count(distinct(Track.GenreId)) as distinct_genres
+      from Track
+      join Album on (Track.AlbumId = Album.AlbumId)
+    group by Album.AlbumId)
+  as my_table where distinct_genres > 1) as result;
 
 
 -- 11.Show the	number of tracks that were ever in some invoice
-
+select count(distinct(TrackId)) from InvoiceLine;
 
 
 -- 12.Show the Customer id and total amount of money billed to the five best customers
 -- (Those with the highest cumulated billed imports)
-
-
-
+select sum(Total) as total_for_all_purchases, CustomerId
+  from Invoice group by CustomerId order by total_for_all_purchases desc limit 5;
 
 -- 13.Add the customer's first name and last name to the previous result
 -- (hint:use a nested query)
