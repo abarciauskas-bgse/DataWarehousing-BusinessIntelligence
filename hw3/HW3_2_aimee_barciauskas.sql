@@ -21,47 +21,70 @@ select
   (select count(*) from Invoice) as total_number_invoices,
   (select count(*) from invoice where total = 0) as invoices_with_zero_total;
 
--- 3.Show the album title and artist name of the first five albums sorted alphabetically
-select Title, ArtistId from Album
-
+-- 3.Show the Album title and Artist name of the first five Albums sorted alphabetically
+select Album.Title, Artist.name as items
+  from Album
+  join Artist on (Album.ArtistId = Artist.ArtistId)
+  order by Title limit 5;
 
 -- 4.Show the Id, first name, and last name of the 10 first customers
 -- alphabetically ordered. Include the id, first name and last name
 -- of their support representative (employee)
+-- QUESTION: sort by first or last name of Customer?
+select Customer.CustomerId, Customer.FirstName, Customer.LastName, Employee.EmployeeId, Employee.FirstName, Employee.LastName
+  from Customer
+  join Employee on (Customer.SupportRepId = Employee.EmployeeId)
+order by Customer.LastName limit 10;
 
-
-
--- 5.Show the Track name, duration, album title, artist name,
+-- 5.Show the Track name, duration, Album title, Artist name,
 --  media name, and genre name for the five longest tracks
-
+select Track.Name, Track.Milliseconds, Album.Title, Artist.Name, MediaType.Name, Genre.Name
+  from Track
+  join Album on (Album.AlbumId = Track.AlbumId)
+  join Artist on (Album.ArtistId = Artist.ArtistId)
+  join MediaType on (Track.MediaTypeId = MediaType.MediaTypeId)
+  join Genre on (Track.GenreId = Genre.GenreId)
+order by Milliseconds desc limit 5;
 
 
 -- 6.Show Employees' first name and last name
 -- together with their supervisor's first name and last name
 -- Sort the result by employee last name
+select Employee.FirstName, Employee.LastName, ReportsTo.FirstName, ReportsTo.LastName
+  from Employee as Employee
+  join Employee as ReportsTo on (Employee.ReportsTo = ReportsTo.EmployeeId)
+order by Employee.LastName;
 
 
-
--- 7.Show the Five most expensive albums
+-- 7.Show the Five most expensive Albums
 --  (Those with the highest cumulated unit price)
 --  together with the average price per track
+-- sum Invoice Line unit price
+select Album.*, avg(Track.UnitPrice) as price_per_track
+  from Track
+  join Album on (Track.AlbumId = Album.AlbumId)
+group by Album.AlbumId order by price_per_track desc limit 5;
 
-
-
--- 8. Show the Five most expensive albums
+-- 8. Show the Five most expensive Albums
 --  (Those with the highest cumulated unit price)
 -- but only if the average price per track is above 1
+-- QUESTION: Should this result be different?
+select * from
+  (select Album.*, avg(Track.UnitPrice) as price_per_track
+    from Track
+    join Album on (Track.AlbumId = Album.AlbumId)
+  group by Album.AlbumId order by price_per_track desc limit 5)
+as result where price_per_track > 1;
 
 
-
--- 9.Show the album Id and number of different genres
--- for those albums with more than one genre
--- (tracks contained in an album must be from at least two different genres)
+-- 9.Show the Album Id and number of different genres
+-- for those Albums with more than one genre
+-- (tracks contained in an Album must be from at least two different genres)
 -- Show the result sorted by the number of different genres from the most to the least eclectic
 
 
 
--- 10.Show the total number of albums that you get from the previous result (hint: use a nested query)
+-- 10.Show the total number of Albums that you get from the previous result (hint: use a nested query)
 
 
 
@@ -101,9 +124,9 @@ select Title, ArtistId from Album
 -- 17.We want to know the number of customers that are above the average expense level per customer. (how many?)
 
 
--- 18.We want to know who is the most purchased artist (considering the number of purchased tracks),
--- who is the most profitable artist (considering the total amount of money generated).
--- and who is the most listened artist (considering purchased song minutes).
+-- 18.We want to know who is the most purchased Artist (considering the number of purchased tracks),
+-- who is the most profitable Artist (considering the total amount of money generated).
+-- and who is the most listened Artist (considering purchased song minutes).
 -- Show the results in 3 rows in the following format:
 -- ArtistName, Concept('Total Quantity','Total Amount','Total Time (in seconds)'), Value
 -- (hint:use the UNION statement)

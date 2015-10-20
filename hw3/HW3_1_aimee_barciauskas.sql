@@ -34,7 +34,7 @@ select count(*) from products where UnitsOnOrder > UnitsInStock;
 select * from products where UnitsInStock > 0 order by ProductName limit 10;
 
 --  7) Create a new table in a separated schema. Call it Products2 with the same content of table products
-
+-- QUESTION: what does it mean separated schema?
 create table Products2 as select * from products;
 
 --  8) Delete the previously created table
