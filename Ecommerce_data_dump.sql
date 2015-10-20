@@ -3267,12 +3267,3 @@ INSERT INTO `order_details` (`odID`, `OrderID`, `ProductID`, `UnitPrice`, `Quant
 (2155, 11077, 77, 0, 2, 0);
 
 -- --------------------------------------------------------
-
---
--- Dumping data for table `shippers`
---
-
-INSERT INTO `shippers` (`ShipperID`, `CompanyName`, `Phone`) VALUES
-(1, 'Speedy Express', '(503) 555-9831'),
-(2, 'United Package', '(503) 555-3199'),
-(3, 'Federal Shipping', '(503) 555-9931');
