@@ -19,10 +19,10 @@ select count(*) from Track where composer like '%F. Baltes%';
 -- 2.Show the Number of invoices, and the number of invoices with a total amount =0
 select
   (select count(*) from Invoice) as total_number_invoices,
-  (select count(*) from invoice where total = 0) as invoices_with_zero_total;
+  (select count(*) from Invoice where total = 0) as invoices_with_zero_total;
 
 -- 3.Show the Album title and Artist name of the first five Albums sorted alphabetically
-select Album.Title, Artist.name as items
+select Album.Title, Artist.name
   from Album
   join Artist on (Album.ArtistId = Artist.ArtistId)
   order by Title limit 5;
@@ -60,6 +60,7 @@ order by Employee.LastName;
 --  (Those with the highest cumulated unit price)
 --  together with the average price per track
 -- sum Invoice Line unit price
+-- FIXME
 select Album.*, avg(Track.UnitPrice) as price_per_track
   from Track
   join Album on (Track.AlbumId = Album.AlbumId)
@@ -68,7 +69,7 @@ group by Album.AlbumId order by price_per_track desc limit 5;
 -- 8. Show the Five most expensive Albums
 --  (Those with the highest cumulated unit price)
 -- but only if the average price per track is above 1
--- QUESTION: Should this result be different?
+-- QUESTION: Should this result be different than the one above?
 select * from (
   select Album.*, avg(Track.UnitPrice) as price_per_track
     from Track
@@ -81,23 +82,19 @@ as result where price_per_track > 1;
 -- for those Albums with more than one genre
 -- (tracks contained in an Album must be from at least two different genres)
 -- Show the result sorted by the number of different genres from the most to the least eclectic
-select * from (
-  select Album.AlbumId, count(distinct(Track.GenreId)) as distinct_genres
-    from Track
-    join Album on (Track.AlbumId = Album.AlbumId)
-  group by Album.AlbumId)
-as my_table where distinct_genres > 1;
+select Album.AlbumId, count(distinct(Track.GenreId)) as distinct_genres
+  from Track
+  join Album on (Track.AlbumId = Album.AlbumId)
+group by Album.AlbumId having distinct_genres > 1;
 
 
 -- 10.Show the total number of Albums that you get from the previous result (hint: use a nested query)
-select count(*) from (
-  select * from (
-    select Album.AlbumId, count(distinct(Track.GenreId)) as distinct_genres
-      from Track
-      join Album on (Track.AlbumId = Album.AlbumId)
-    group by Album.AlbumId)
-  as my_table where distinct_genres > 1) as result;
-
+select count(*) as total_number_of_albums from (
+  select Album.AlbumId, count(distinct(Track.GenreId)) as distinct_genres
+    from Track
+    join Album on (Track.AlbumId = Album.AlbumId)
+  group by Album.AlbumId having distinct_genres > 1
+) as result;
 
 -- 11.Show the	number of tracks that were ever in some invoice
 select count(distinct(TrackId)) from InvoiceLine;
